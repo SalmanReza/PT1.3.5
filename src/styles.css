@@ -1,0 +1,737 @@
+/* v1.3.1 selectable interface fonts (Settings -> Font): local WOFF2 subsets, SIL OFL; see src/fonts/ui/README.txt */
+@font-face { font-family: "Hind Siliguri"; src: url("./fonts/ui/hind-siliguri-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Hind Siliguri"; src: url("./fonts/ui/hind-siliguri-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Noto Sans Bengali"; src: url("./fonts/ui/noto-sans-bengali.woff2") format("woff2"); font-weight: 400 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Noto Serif Bengali"; src: url("./fonts/ui/noto-serif-bengali.woff2") format("woff2"); font-weight: 400 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Anek Bangla"; src: url("./fonts/ui/anek-bangla.woff2") format("woff2"); font-weight: 400 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Baloo Da 2"; src: url("./fonts/ui/baloo-da-2-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Baloo Da 2"; src: url("./fonts/ui/baloo-da-2-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Tiro Bangla"; src: url("./fonts/ui/tiro-bangla-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Galada"; src: url("./fonts/ui/galada-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Atma"; src: url("./fonts/ui/atma-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Atma"; src: url("./fonts/ui/atma-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Mina"; src: url("./fonts/ui/mina-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Mina"; src: url("./fonts/ui/mina-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+/* Local subset of Aref Ruqaa Bold (SIL OFL 1.1) used only for the daily reward phrase. */
+@font-face {
+  font-family: "Alhamdulillah Ruqaa";
+  src: url("./fonts/alhamdulillah-aref-ruqaa.woff") format("woff");
+  font-display: block;
+  unicode-range: U+0020, U+0627, U+062D, U+062F, U+0644, U+0645, U+0647;
+}
+
+:root {
+  color-scheme: dark;
+  --ui-font: "Segoe UI Variable", "Segoe UI", "Nirmala UI", "Amiri", system-ui, sans-serif;
+  font-family: var(--ui-font);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --bg: #101719;
+  --surface: #192326;
+  --surface2: #202b2e;
+  --surface3: #263337;
+  --text: #f1f4f0;
+  --muted: #a2b0ab;
+  --line: #334347;
+  --accent: #a9c6b5;
+  --accent2: #283a35;
+  --good: #5dbb83;
+  --gold: #c8a86a;
+  --danger: #d47a78;
+  --shadow: 0 0.875rem 2.25rem rgba(0,0,0,.16);
+  --radius: 1.125rem;
+  background: var(--bg);
+  color: var(--text);
+}
+
+* { box-sizing: border-box; }
+
+/* Responsive desktop scale: 1440p and 2160p/4K viewports gain larger text, controls and
+   spacing; restoring or resizing the window smoothly scales the same layout. */
+html { font-size: clamp(14px, calc(12.8px + 0.32vw + 0.18vh), 28px); }
+body { font-size: .875rem; }
+main { min-width: 0; }
+html { min-width: 0; min-height: 100%; background: var(--bg); scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-width: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 7% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 34rem),
+    radial-gradient(ellipse at 95% 12%, color-mix(in srgb, var(--gold) 5%, transparent), transparent 30rem),
+    var(--bg);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+button, input, select { font: inherit; }
+button { color: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible,
+a:focus-visible, [tabindex]:focus-visible, dialog :focus-visible {
+  outline: 0.125rem solid var(--accent); outline-offset: 0.1875rem;
+}
+:focus:not(:focus-visible) { outline: none; }
+[hidden] { display: none !important; }
+
+/* The shell is the responsive sizing container. All rem-based UI dimensions
+   scale with the WebView viewport, while container queries adapt the layout. */
+.app-shell { container: app-shell / inline-size; width: min(3400px, 100%); margin: 0 auto; padding: clamp(1.25rem, 1.55cqi, 2.8rem) clamp(1.4rem, 2.0cqi, 3.5rem) clamp(2rem, 2.25cqi, 3.8rem); }
+.topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 1.375rem;
+  min-height: 4.5rem; padding: 0 0 1.125rem; border-bottom: 0.0625rem solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 0.8125rem; min-width: 0; }
+.brand-mark {
+  display: grid; place-items: center; flex: 0 0 3rem; width: 3rem; height: 3rem;
+  border-radius: 0.9375rem; color: white; background: #080a0b;
+  box-shadow: 0 0.375rem 1.125rem rgba(0,0,0,.16);
+}
+.brand-mark svg { width: 2.125rem; height: 2.125rem; fill: none; stroke: currentColor; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
+.brand-name { font-size: 1.3125rem; line-height: 1.12; letter-spacing: -.035em; font-weight: 700; }
+.brand-sub { margin-top: 0.3125rem; color: var(--muted); font-size: 0.6875rem; letter-spacing: .015em; }
+.top-date { margin-left: auto; text-align: right; min-width: 11.25rem; color: var(--muted); font-size: 0.6875rem; }
+.top-date time { display: block; margin-top: 0.125rem; color: var(--text); font: 700 1.0625rem/1.2 ui-monospace, Consolas, monospace; letter-spacing: .065em; font-variant-numeric: tabular-nums; }
+.icon-button {
+  display: grid; place-items: center; width: 2.625rem; height: 2.625rem; flex: 0 0 2.625rem;
+  border: 0.0625rem solid var(--line); border-radius: 0.8125rem; background: var(--surface);
+  color: var(--text); cursor: pointer; transition: background .16s ease, border-color .16s ease, transform .16s ease;
+}
+.icon-button:hover { background: var(--surface2); border-color: var(--accent); transform: translateY(-0.0625rem); }
+.icon-button svg { width: 1.25rem; height: 1.25rem; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(19.375rem, .85fr); gap: 0.9375rem; margin-top: 1.375rem; }
+.panel { border: 0.0625rem solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+.next-card {
+  position: relative; overflow: hidden; min-height: 14.6875rem; padding: 1.6875rem 1.875rem 1.375rem;
+  background: linear-gradient(132deg, var(--surface), color-mix(in srgb, var(--accent) 9%, var(--surface)) 100%);
+}
+.next-card::after { content: ""; position: absolute; width: 15rem; height: 15rem; right: -4.875rem; top: -6.125rem; border: 0.0625rem solid color-mix(in srgb, var(--accent) 19%, transparent); border-radius: 50%; box-shadow: 0 0 0 1.375rem color-mix(in srgb, var(--accent) 3%, transparent), 0 0 0 2.8125rem color-mix(in srgb, var(--accent) 2%, transparent); pointer-events: none; }
+.eyebrow { color: var(--muted); font-size: 0.5625rem; line-height: 1.4; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.next-name { display: block; position: relative; z-index: 1; margin: 0.5625rem 0 0; padding: 0; border: 0; color: var(--text); background: none; text-align: left; font: 700 1.8125rem/1.18 var(--ui-font); letter-spacing: -.04em; cursor: pointer; }
+.next-name:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 0.25rem; }
+.next-count { display: block; position: relative; z-index: 1; margin: 0.625rem 0 0; padding: 0; border: 0; background: none; color: var(--accent); text-align: left; font: 750 clamp(2.125rem, 5vw, 3.1875rem)/1.08 ui-monospace, Consolas, monospace; letter-spacing: -.04em; font-variant-numeric: tabular-nums; cursor: pointer; }
+.next-count:hover { color: var(--text); }
+.next-meta { position: relative; z-index: 1; margin-top: 0.6875rem; color: var(--muted); font-size: 0.6875rem; }
+.next-foot { position: relative; z-index: 1; display: flex; align-items: center; gap: 0.5rem; margin-top: 1.1875rem; padding-top: 0.8125rem; border-top: 0.0625rem solid var(--line); color: var(--muted); font-size: 0.625rem; }
+.status-dot { width: 0.4375rem; height: 0.4375rem; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--good) 14%, transparent); }
+.progress-panel { min-height: 14.6875rem; padding: 1.4375rem 1.5rem 1.125rem; }
+.progress-head { display: flex; align-items: center; justify-content: space-between; gap: 1.125rem; }
+.progress-head > div:first-child { flex: 1 1 auto; min-width: 0; }
+.progress-title, .progress-status { overflow-wrap: anywhere; }
+.progress-status { max-width: 22rem; margin: 0.375rem 0 0; color: var(--muted); font-size: 0.71875rem; line-height: 1.45; }
+.progress-status:empty { display: none; }
+.compact-mode .progress-title { margin-top: 0.3125rem; font: 700 1.25rem/1.2 var(--ui-font); letter-spacing: -.025em; }
+.progress-visual { position: relative; display: grid; place-items: center; flex: 0 0 8.25rem; width: 8.25rem; height: 8.25rem; }
+/* v1.3.1 progress circles. One set of layer tokens is shared by the figure,
+   the prayer-list tick circles, the live-event ticks and the legend, so the
+   colours never drift apart. Inside → out: white Fard, green Sunnah, black
+   Nafl, red-black striped Hillah (standalone voluntary), saffron (date-specific). */
+body {
+  --layer-fard: #F7F4EC; --layer-fard-line: #F7F4EC; --layer-fard-edge: transparent; --layer-fard-ink: #141414;
+  --layer-fard-track: color-mix(in srgb, #F7F4EC 20%, transparent);
+  --layer-sunnah: #1E8E5A; --layer-sunnah-track: color-mix(in srgb, #1E8E5A 24%, transparent);
+  --layer-nafl: #141414; --layer-nafl-edge: rgba(255,255,255,.42); --layer-nafl-track: color-mix(in srgb, #ffffff 11%, transparent);
+  --layer-hillah-red: #B3122E; --layer-hillah-dark: #141414;
+  --layer-hillah: repeating-linear-gradient(45deg, #B3122E 0 .17rem, #141414 .17rem .27rem);
+  --layer-seasonal: #E8A33D; --layer-seasonal-track: color-mix(in srgb, #E8A33D 24%, transparent);
+}
+body[data-mode="light"] {
+  --layer-fard: #F3EEE2; --layer-fard-line: #BDB6A6; --layer-fard-edge: #BDB6A6;
+  --layer-fard-track: color-mix(in srgb, #BDB6A6 45%, transparent);
+  --layer-nafl-edge: transparent; --layer-nafl-track: color-mix(in srgb, #141414 14%, transparent);
+  --layer-seasonal: #D98B1C; --layer-seasonal-track: color-mix(in srgb, #D98B1C 26%, transparent);
+}
+.progress-figure { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pf { display: block; width: 100%; height: 100%; overflow: visible; }
+.pf-track.fard { stroke: var(--layer-fard-track); }
+.pf-track.sunnah { stroke: var(--layer-sunnah-track); }
+.pf-track.nafl { stroke: var(--layer-nafl-track); }
+.pf-track.voluntary { stroke: url(#hillahStripes); stroke-opacity: .22; }
+.pf-track.seasonal { stroke: var(--layer-seasonal-track); }
+.pf-seg.fard { stroke: var(--layer-fard); }
+.pf-seg.sunnah { stroke: var(--layer-sunnah); }
+.pf-seg.nafl { stroke: var(--layer-nafl); }
+.pf-seg.voluntary { stroke: url(#hillahStripes); }
+.pf-seg.seasonal { stroke: var(--layer-seasonal); }
+.pf-edge { stroke: transparent; }
+.pf-edge.fard { stroke: var(--layer-fard-edge); }
+.pf-edge.nafl { stroke: var(--layer-nafl-edge); }
+.pf-disc { fill: var(--layer-fard); stroke: var(--layer-fard-edge); stroke-width: 1.5; }
+/* A ring is solid with a soft glow only once all of its segments are done. */
+.pf-ring.closed.fard .pf-seg { filter: drop-shadow(0 0 3px color-mix(in srgb, var(--layer-fard) 55%, transparent)); }
+.pf-ring.closed.sunnah .pf-seg { filter: drop-shadow(0 0 3px color-mix(in srgb, var(--layer-sunnah) 70%, transparent)); }
+.pf-ring.closed.nafl .pf-seg { filter: drop-shadow(0 0 3px var(--layer-nafl-edge)); }
+.pf-ring.closed.voluntary .pf-seg { filter: drop-shadow(0 0 3px color-mix(in srgb, var(--layer-hillah-red) 60%, transparent)); }
+.pf-ring.closed.seasonal .pf-seg { filter: drop-shadow(0 0 3px color-mix(in srgb, var(--layer-seasonal) 70%, transparent)); }
+.pf-mini .pf-ring.closed .pf-seg { filter: none; }
+.pf-disc { filter: drop-shadow(0 0 3px color-mix(in srgb, var(--layer-fard) 45%, transparent)); }
+.pf .sweep { animation: pf-sweep .4s cubic-bezier(.2,.8,.2,1) both; }
+.pf .closing { animation: pf-close .5s ease-out both; }
+@keyframes pf-sweep { from { stroke-dasharray: 0 100; } }
+@keyframes pf-close { from { opacity: .45; } }
+.pf-reward { fill: var(--layer-sunnah); font-family: "Alhamdulillah Ruqaa", "Aref Ruqaa", "Amiri", "Arabic Typesetting", "Traditional Arabic", serif; font-weight: 700; pointer-events: none; }
+.pf-reward.fade-in { animation: pf-fade .6s ease-out .15s both; }
+@keyframes pf-fade { from { opacity: 0; } }
+.legend-dot { display: inline-block; width: 0.5625rem; height: 0.5625rem; border-radius: 50%; }
+.legend-dot.fard { background: var(--layer-fard); box-shadow: 0 0 0 0.0625rem var(--layer-fard-line); }
+.legend-dot.sunnah { background: var(--layer-sunnah); }
+.legend-dot.nafl { background: var(--layer-nafl); box-shadow: 0 0 0 0.0625rem var(--layer-nafl-edge); }
+.legend-dot.voluntary { background: var(--layer-hillah); }
+.legend-dot.seasonal { background: var(--layer-seasonal); }
+.progress-legend { flex-wrap: wrap; row-gap: .35rem; }
+/* Prayer parts in performance order: large Fard circle, smaller Sunnah/Nafl. */
+.prayer-parts { display: flex; align-items: flex-start; margin-top: 0.625rem; }
+.part-link { flex: 0 0 0.375rem; height: 0.125rem; margin-top: 0.6875rem; border-radius: 0.0625rem; background: var(--line); }
+.part-tick { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.1875rem 0.0625rem; border: 0; border-radius: 0.5rem; background: transparent; color: var(--muted); font-size: 0.5rem; line-height: 1.25; text-align: center; overflow-wrap: anywhere; cursor: pointer; }
+.part-tick i { display: grid; place-items: center; width: 1rem; height: 1rem; margin-top: 0.1875rem; border: 0.125rem solid var(--layer-sunnah); border-radius: 50%; font-style: normal; font-size: 0.5625rem; font-weight: 800; color: #ffffff; transition: background .16s ease, transform .16s ease; }
+.part-tick.fard i { width: 1.5rem; height: 1.5rem; margin-top: 0; border-color: var(--layer-fard-line); font-size: 0.8125rem; color: var(--layer-fard-ink); }
+.part-tick.fard.done i { border-color: var(--layer-fard-line); background: var(--layer-fard); box-shadow: 0 0 0 0.0625rem var(--layer-fard-edge); }
+.part-tick.sunnah.done i { background: var(--layer-sunnah); }
+.part-tick.nafl i { border-color: var(--layer-nafl); box-shadow: 0 0 0 0.0625rem var(--layer-nafl-edge); }
+.part-tick.nafl.done i { background: var(--layer-nafl); }
+.part-tick.done span { color: var(--text); }
+.part-tick:not(:disabled):hover i { transform: scale(1.07); }
+.part-tick:not(:disabled):hover span { color: var(--text); }
+.part-tick:disabled { cursor: default; }
+.prayer-parts.is-closed .part-tick { opacity: .45; }
+.live-event-main .prayer-parts { width: 100%; max-width: 16rem; }
+.live-event-main .part-link { flex-basis: 0.5rem; }
+/* Live-event ticks use their layer's colour (shared tokens). */
+.round-check.layer-fard:hover { border-color: var(--layer-fard-line); }
+.round-check.layer-fard[aria-pressed="true"] { border-color: var(--layer-fard-line); background: var(--layer-fard); color: var(--layer-fard-ink); }
+.round-check.layer-voluntary:hover { border-color: var(--layer-hillah-red); }
+.round-check.layer-voluntary[aria-pressed="true"] { border-color: var(--layer-hillah-red); background: var(--layer-hillah); color: #ffffff; text-shadow: 0 0 0.125rem #000; }
+.round-check.layer-seasonal:hover { border-color: var(--layer-seasonal); }
+.round-check.layer-seasonal[aria-pressed="true"] { border-color: var(--layer-seasonal); background: var(--layer-seasonal); color: #141414; }
+.progress-visual.disc-done .progress-core-label { color: var(--layer-fard-ink); }
+.progress-core-label { position: relative; z-index: 1; color: var(--text); font: 750 0.75rem/1 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; }
+.progress-caption { max-width: 31.25rem; margin-top: 0.875rem; color: var(--muted); font-size: 0.65625rem; line-height: 1.5; }
+.progress-legend { display: flex; align-items: center; gap: 1rem; margin-top: 0.8125rem; color: var(--muted); font-size: 0.5625rem; }
+.progress-legend span { display: inline-flex; align-items: center; gap: 0.375rem; }
+
+.occasion-banner { display: flex; flex-direction: column; gap: 0.1875rem; margin-top: 0.9375rem; padding: 0.875rem 1.0625rem; border: 0.0625rem solid color-mix(in srgb, var(--gold) 42%, var(--line)); border-radius: 0.875rem; background: color-mix(in srgb, var(--gold) 8%, var(--surface)); }
+.occasion-banner strong { color: var(--text); font-size: 0.8125rem; }
+.occasion-banner span { color: var(--muted); font-size: 0.625rem; line-height: 1.45; }
+.section-block { margin-top: 1.6875rem; }
+.section-heading { display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin-bottom: 0.75rem; }
+.section-heading h2, .settings-title h1 { margin: 0.3125rem 0 0; font: 700 1.3125rem/1.15 var(--ui-font); letter-spacing: -.035em; }
+.muted { color: var(--muted); font-size: 0.625rem; line-height: 1.5; }
+.day-switch { display: flex; align-items: center; gap: 0.5625rem; color: var(--muted); font-size: 0.625rem; }
+.day-switch button { display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border: 0.0625rem solid var(--line); border-radius: 0.5625rem; background: var(--surface); color: var(--text); font-size: 1.125rem; cursor: pointer; }
+.day-switch button:hover { border-color: var(--accent); background: var(--surface2); }
+
+.live-events { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5625rem; }
+.live-event { display: flex; align-items: center; justify-content: space-between; gap: 0.625rem; min-width: 0; min-height: 6.125rem; padding: 0.8125rem 0.875rem; border: 0.0625rem solid var(--line); border-radius: 0.875rem; background: var(--surface); transition: border-color .16s ease, transform .16s ease; }
+.live-event:hover { border-color: color-mix(in srgb, var(--accent) 65%, var(--line)); transform: translateY(-0.0625rem); }
+.live-event.voluntary { border-style: dashed; }
+.live-event.is-done { border-color: color-mix(in srgb, var(--good) 55%, var(--line)); background: color-mix(in srgb, var(--good) 8%, var(--surface)); }
+.live-event-main { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+.live-event-type { margin-bottom: 0.3125rem; color: var(--muted); font-size: 0.5rem; font-weight: 800; letter-spacing: .13em; }
+.live-name { max-width: 100%; padding: 0; overflow: hidden; border: 0; background: transparent; color: var(--text); text-align: left; text-overflow: ellipsis; white-space: nowrap; font-size: 0.8125rem; font-weight: 700; cursor: pointer; }
+.live-name:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 0.1875rem; }
+.live-event-main small { margin-top: 0.3125rem; color: var(--muted); font-size: 0.5625rem; white-space: normal; overflow-wrap: anywhere; }
+.live-event-actions { display: flex; align-items: center; gap: 0.5rem; flex: 0 0 auto; }
+.event-countdown { display: flex; flex-direction: column; gap: 0.1875rem; align-items: flex-end; padding: 0.375rem 0.4375rem; border: 0; border-radius: 0.5rem; background: transparent; color: var(--text); cursor: pointer; }
+.event-countdown:hover { background: var(--surface2); }
+.event-countdown span { color: var(--muted); font-size: 0.4375rem; font-weight: 800; letter-spacing: .1em; }
+.event-countdown strong { color: var(--accent); font: 700 0.8125rem/1.15 ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; }
+.round-check { display: grid; place-items: center; flex: 0 0 1.5rem; width: 1.5rem; height: 1.5rem; padding: 0; border: 0.09375rem solid var(--muted); border-radius: 50%; background: transparent; color: white; font-size: 0.875rem; cursor: pointer; transition: background .15s ease, border-color .15s ease, transform .15s ease; }
+.round-check:hover { border-color: var(--good); transform: scale(1.07); }
+.round-check[aria-pressed="true"] { border-color: var(--good); background: var(--good); }
+.live-empty { grid-column: 1 / -1; display: flex; align-items: center; gap: 0.8125rem; padding: 1.0625rem 1.1875rem; border: 0.0625rem dashed var(--line); border-radius: 0.875rem; background: var(--surface); color: var(--muted); font-size: 0.6875rem; }
+.live-empty strong { display: block; color: var(--text); font-size: 0.75rem; }
+.live-empty small { display: block; margin-top: 0.25rem; color: var(--muted); font-size: 0.625rem; }
+.empty-mark { color: var(--accent); font-size: 1.5rem; }
+
+.prayer-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.625rem; }
+.prayer-card { min-width: 0; padding: 0.9375rem; border: 0.0625rem solid var(--line); border-radius: 0.875rem; background: var(--surface); transition: border-color .16s ease, background .16s ease; }
+.prayer-card.active { border-color: var(--accent); box-shadow: inset 0 0 0 0.0625rem color-mix(in srgb, var(--accent) 42%, transparent); background: color-mix(in srgb, var(--accent) 7%, var(--surface)); }
+.prayer-card.done { border-color: color-mix(in srgb, var(--good) 45%, var(--line)); background: color-mix(in srgb, var(--good) 8%, var(--surface)); }
+.prayer-card-head { display: flex; align-items: center; justify-content: space-between; gap: 0.375rem; }
+.prayer-name-button { max-width: 100%; padding: 0; border: 0; background: transparent; color: var(--text); text-align: left; font-size: 0.8125rem; font-weight: 700; cursor: pointer; }
+.prayer-name-button:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 0.1875rem; }
+.prayer-index { color: var(--muted); font: 700 0.5625rem/1 ui-monospace, Consolas, monospace; }
+.prayer-time { margin-top: 0.8125rem; color: var(--text); font-size: 1.0625rem; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -.025em; white-space: nowrap; }
+.prayer-status { margin-top: 0.3125rem; color: var(--muted); font-size: 0.5625rem; }
+.prayer-note { margin: 0.5rem 0 0; color: var(--muted); font-size: 0.5625rem; line-height: 1.5; overflow-wrap: anywhere; }
+.prayer-note-ref { color: var(--accent); font-weight: 650; white-space: nowrap; }
+
+.voluntary-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5625rem; }
+.voluntary-item { min-width: 0; padding: 0.8125rem 0.9375rem; border: 0.0625rem solid var(--line); border-radius: 0.8125rem; background: var(--surface); }
+.voluntary-item.done { border-color: color-mix(in srgb, var(--good) 45%, var(--line)); }
+.voluntary-item summary { display: flex; align-items: center; justify-content: space-between; gap: 0.625rem; cursor: pointer; list-style: none; }
+.voluntary-item summary::-webkit-details-marker { display: none; }
+.voluntary-summary-main { min-width: 0; }
+.voluntary-item strong { display: block; color: var(--text); font-size: 0.75rem; }
+.voluntary-item small { display: block; margin-top: 0.25rem; color: var(--muted); font-size: 0.5625rem; line-height: 1.4; }
+.voluntary-chevron { color: var(--muted); transition: transform .16s ease; }
+.voluntary-item[open] .voluntary-chevron { transform: rotate(180deg); }
+.voluntary-detail { padding-top: 0.5625rem; margin-top: 0.5625rem; border-top: 0.0625rem solid var(--line); color: var(--muted); font-size: 0.625rem; line-height: 1.55; }
+.voluntary-detail p { margin: 0 0 0.25rem; }
+.voluntary-detail small { margin-top: 0.25rem; }
+.voluntary-empty { grid-column: 1 / -1; padding: 1rem; border: 0.0625rem dashed var(--line); border-radius: 0.75rem; color: var(--muted); font-size: 0.625rem; }
+
+/* Live notice during a prohibited interval: same gold accent as the Zawal row, kept subtle. */
+footer { padding: 1.75rem 0 0; color: var(--muted); text-align: center; font-size: 0.5625rem; }
+
+.settings-title { display: flex; justify-content: space-between; align-items: center; margin: 1.625rem 0 1.0625rem; }
+.settings-title h1 { font-size: 1.6875rem; }
+.settings-title p { margin: 0.375rem 0 0; }
+.settings-card { padding: 1.3125rem 1.4375rem; margin-bottom: 0.8125rem; }
+.settings-card h2 { margin: 0.25rem 0 0.5rem; font-size: 1rem; font-weight: 700; letter-spacing: -.02em; }
+.settings-card p { line-height: 1.55; }
+.settings-card label { display: block; margin: 0.875rem 0 0.375rem; color: var(--text); font-size: 0.625rem; font-weight: 700; }
+.settings-card input:not([type="checkbox"]), .settings-card select {
+  width: 100%; min-width: 0; padding: 0.6875rem 0.75rem; border: 0.0625rem solid var(--line); border-radius: 0.625rem;
+  outline: none; background: var(--bg); color: var(--text); font: 0.75rem var(--ui-font);
+}
+.settings-card input:focus, .settings-card select:focus { border-color: var(--accent); box-shadow: 0 0 0 0.1875rem color-mix(in srgb, var(--accent) 12%, transparent); }
+.settings-card input::placeholder { color: var(--muted); opacity: .65; }
+.inline-input { display: flex; align-items: stretch; gap: 0.5rem; }
+.inline-input input { flex: 1; }
+.primary-button, .secondary-button, .danger-button {
+  padding: 0.625rem 0.9375rem; border: 0.0625rem solid transparent; border-radius: 0.625rem; font-size: 0.625rem; font-weight: 750; cursor: pointer; transition: transform .15s ease, filter .15s ease, border-color .15s ease;
+}
+.primary-button { background: var(--accent); color: color-mix(in srgb, var(--accent) 15%, #09110d); }
+.secondary-button { border-color: var(--line); background: var(--surface2); color: var(--text); }
+.danger-button { border-color: color-mix(in srgb, var(--danger) 40%, var(--line)); background: transparent; color: var(--danger); }
+.primary-button:hover, .secondary-button:hover, .danger-button:hover { transform: translateY(-0.0625rem); filter: brightness(1.06); }
+.form-note { margin-top: 0.4375rem; color: var(--muted); font-size: 0.5625rem; line-height: 1.5; }
+.coordinate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.location-save-row { display: flex; align-items: center; gap: 0.75rem; margin-top: 0.8125rem; }
+.location-save-row .form-note { margin: 0; }
+.local-badge { display: inline-flex; align-items: center; gap: 0.4375rem; padding: 0.375rem 0.625rem; border: 0.0625rem solid var(--line); border-radius: 6.25rem; color: var(--muted); font-size: 0.5625rem; }
+.local-badge i { width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--good); }
+.saved-location { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.0625rem; padding: 0.8125rem 0.875rem; border: 0.0625rem solid var(--line); border-radius: 0.75rem; background: var(--surface2); }
+.saved-location-icon { display: grid; place-items: center; width: 2.0625rem; height: 2.0625rem; border-radius: 0.625rem; background: var(--accent2); color: var(--accent); font-size: 1.1875rem; }
+.saved-location small, .saved-location strong, .saved-location span:not(.saved-location-icon) { display: block; }
+.saved-location small { color: var(--muted); font-size: 0.5rem; }
+.saved-location strong { margin-top: 0.125rem; font-size: 0.6875rem; }
+.saved-location span:not(.saved-location-icon) { margin-top: 0.125rem; color: var(--muted); font: 0.5625rem ui-monospace, Consolas, monospace; }
+.setting-row { display: flex; align-items: center; justify-content: space-between; gap: 0.9375rem; padding: 0.75rem 0; border-bottom: 0.0625rem solid var(--line); }
+.setting-row:last-of-type { border: 0; }
+.setting-row strong { display: block; font-size: 0.625rem; }
+.setting-row small { display: block; margin-top: 0.25rem; color: var(--muted); font-size: 0.5625rem; line-height: 1.4; }
+.pill { flex: 0 0 auto; padding: 0.3125rem 0.5625rem; border-radius: 6.25rem; background: var(--surface2); color: var(--accent); font-size: 0.5rem; font-weight: 700; }
+.calculation-profile > summary { display: flex; align-items: center; justify-content: space-between; gap: 0.9375rem; list-style: none; cursor: pointer; }
+.calculation-profile > summary::-webkit-details-marker { display: none; }
+.calculation-profile > summary::after { content: "＋"; color: var(--muted); font-size: 0.9375rem; }
+.calculation-profile[open] > summary::after { content: "−"; }
+.calculation-profile > summary h2 { margin: 0.1875rem 0 0; font-size: 1.0625rem; }
+.profile-summary { color: var(--muted); font-size: 0.5625rem; }
+.check-row { display: flex !important; align-items: center; gap: 0.5625rem; font-weight: 500 !important; cursor: pointer; }
+.check-row input { width: 0.9375rem; height: 0.9375rem; accent-color: var(--accent); }
+.theme-preview { display: flex; gap: 0.5rem; margin-top: 0.625rem; }
+.theme-swatch { width: 1.5625rem; height: 1.5625rem; border: 0.125rem solid var(--line); border-radius: 50%; }
+.adjustment-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 0.625rem; }
+.adjustment-item { display: flex !important; align-items: center; justify-content: space-between; gap: 0.5rem; margin: 0 !important; padding: 0.5625rem 0.625rem; border: 0.0625rem solid var(--line); border-radius: 0.625rem; background: var(--bg); }
+.adjustment-item span { font-size: 0.5625rem; }
+.adjustment-item input { max-width: 4.5rem; padding: 0.4375rem 0.5rem !important; text-align: right; }
+.data-actions { display: flex; gap: 0.5625rem; margin-top: 0.875rem; }
+
+.countdown-back { display: inline-flex; align-items: center; gap: 0.5rem; margin: 1.5625rem 0 0.8125rem; padding: 0.5625rem 0.8125rem; border: 0.0625rem solid var(--line); border-radius: 0.625rem; background: var(--surface); color: var(--text); font-size: 0.625rem; font-weight: 700; cursor: pointer; }
+.countdown-back:hover { border-color: var(--accent); background: var(--surface2); }
+.countdown-focus { max-width: 48.75rem; margin: 0.9375rem auto; padding: 3.375rem 2.1875rem 2.8125rem; text-align: center; background: linear-gradient(145deg, var(--surface), color-mix(in srgb, var(--accent) 8%, var(--surface))); }
+.countdown-focus h1 { margin: 0.8125rem 0 0; font-size: 2.0625rem; letter-spacing: -.045em; }
+.countdown-large { margin-top: 1.25rem; color: var(--accent); font: 760 clamp(2.875rem, 7vw, 4.75rem)/1.08 ui-monospace, Consolas, monospace; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
+.countdown-description { margin-top: 0.875rem; color: var(--muted); font-size: 0.6875rem; }
+.countdown-start { margin-top: 1.6875rem; padding-top: 1.125rem; border-top: 0.0625rem solid var(--line); color: var(--muted); font-size: 0.6875rem; }
+.toast { position: fixed; z-index: 50; left: 50%; bottom: 1.375rem; transform: translate(-50%, 0.875rem); max-width: min(32.5rem, calc(100vw - 2.5rem)); padding: 0.6875rem 1.0625rem; border: 0.0625rem solid var(--line); border-radius: 0.6875rem; background: var(--text); color: var(--bg); box-shadow: var(--shadow); font-size: 0.625rem; font-weight: 650; opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease; }
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+.compact-mode .app-shell { max-width: 65.625rem; padding-top: 1.0625rem; }
+.compact-mode .hero-grid { margin-top: 0.9375rem; }
+.compact-mode .section-block { margin-top: 1.25rem; }
+.compact-mode .live-event { min-height: 5.375rem; padding: 0.625rem 0.6875rem; }
+.compact-mode .prayer-card { padding: 0.6875rem; }
+.compact-mode .settings-card { padding: 1rem 1.125rem; }
+
+@media (max-width: 1000px) {
+  .app-shell { padding: 1.25rem 1.375rem 2.125rem; }
+  .live-events { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero-grid { grid-template-columns: minmax(0,1.2fr) minmax(17.8125rem,.8fr); }
+}
+@media (max-width: 780px) {
+  html, body { min-width: 0; }
+  .app-shell { padding: 0.9375rem 0.875rem 1.875rem; }
+  .topbar { gap: 0.625rem; }
+  .top-date { min-width: 8.75rem; }
+  .brand-name { font-size: 1.125rem; }
+  .hero-grid { grid-template-columns: 1fr; }
+  .next-card, .progress-panel { min-height: auto; }
+  .prayer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .voluntary-list { grid-template-columns: 1fr; }
+    .countdown-focus { padding: 2.375rem 1.125rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+
+/* High-resolution desktop layouts. These query the actual app content width,
+   not the monitor model, so the same project adapts while the window is resized. */
+@container app-shell (min-width: 1450px) {
+  .live-events { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; }
+  .voluntary-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #settingsView { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: .85rem; }
+  #settingsView > .settings-title,
+  #settingsView > .location-settings,
+  #settingsView > .settings-card:last-of-type { grid-column: 1 / -1; }
+  #settingsView > .settings-card { min-width: 0; }
+  .settings-title { margin-top: .9rem; }
+}
+
+@container app-shell (min-width: 1900px) {
+  .topbar { min-height: 5.25rem; padding-bottom: 1.25rem; }
+  .hero-grid { gap: 1.2rem; margin-top: 1.5rem; }
+  .next-card, .progress-panel { min-height: 16rem; padding: 1.9rem 2.1rem; }
+  .progress-visual { flex-basis: 8rem; width: 8rem; height: 8rem; }
+  .section-block { margin-top: 1.8rem; }
+  .live-event { min-height: 6.25rem; padding: .9rem 1rem; }
+  .prayer-card { padding: 1.1rem; }
+  .settings-card { padding: 1.45rem 1.65rem; }
+  .countdown-focus { max-width: 64rem; padding: 3.2rem 2.8rem; }
+}
+
+@container app-shell (max-width: 1100px) {
+  .live-events { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #settingsView { display: block; }
+}
+
+@container app-shell (max-width: 780px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .prayer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .voluntary-list { grid-template-columns: 1fr; }
+  }
+
+/* Weekly review and Islamic-history panel */
+.weekly-review { padding: 1rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--surface); }
+.week-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(6.5rem,1fr)); gap:1rem; }
+.week-summary > div { display:flex; flex-direction:column; gap:.35rem; min-width:0; }
+.week-summary span { color:var(--muted); font-size:.62rem; letter-spacing:.07em; }
+.week-summary strong { font-size:1.25rem; font-weight:750; }
+.week-summary strong small { color:var(--muted); font-size:.7rem; font-weight:500; }
+.week-summary .week-range strong { font-size:.85rem; font-weight:650; }
+/* Seven full days, Saturday → Friday. Each day: a mini progress figure. */
+.week-constellation { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:.55rem; margin-top:1.15rem; }
+.week-day { position:relative; display:flex; min-width:0; flex-direction:column; align-items:center; gap:.4rem; padding:.65rem .2rem .55rem; border:1px solid transparent; border-radius:.8rem; background:var(--surface2); }
+.week-day > strong { font-size:.7rem; }
+.week-day .week-date { margin-top:-.3rem; color:var(--muted); font-size:.55rem; }
+.week-day.today { border-color:var(--accent); box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 25%,transparent); }
+.week-day.friday { background:color-mix(in srgb,var(--good) 9%,var(--surface2)); border-color:color-mix(in srgb,var(--good) 35%,transparent); }
+.week-day.friday.today { border-color:var(--accent); }
+.week-day.future { opacity:.55; }
+.week-figure { display:block; width:3.25rem; height:3.25rem; }
+.compact-mode .week-figure { width:2.6rem; height:2.6rem; }
+.week-day small { color:var(--muted); font-size:.55rem; text-align:center; white-space:nowrap; }
+.week-jumuah { font-style:normal; font-size:.5rem; font-weight:650; color:var(--good); text-align:center; line-height:1.15; overflow-wrap:anywhere; }
+.week-foot { margin:.9rem 0 0; color:var(--muted); font-size:.65rem; }
+.on-this-day-card { padding:1rem 1.1rem; border:1px solid var(--line); border-radius:1rem; background:var(--surface); }
+.on-this-day-card strong { display:block; font-size:.95rem; }
+.on-this-day-card p { max-width:70rem; margin:.5rem 0 0; color:var(--muted); font-size:.75rem; line-height:1.65; }
+.rakah-line { display:block; margin-top:.45rem; color:var(--accent); font-size:.7rem; font-weight:700; line-height:1.55; }
+.voluntary-detail .rakah-line { margin:.55rem 0; }
+.voluntary-detail p { line-height:1.6; }
+@media(max-width:680px) { .week-constellation { gap:.15rem; } .week-day { padding:.5rem 0; } .week-day small { font-size:.48rem; } .week-summary { gap:.5rem; grid-template-columns:repeat(2,minmax(0,1fr)); } .week-summary .week-range { grid-column:1 / -1; } .week-jumuah { font-size:.42rem; } .week-square { grid-template-columns:repeat(2,.45rem); } .week-square i { width:.45rem; height:.45rem; } }
+.hijri-date-label { margin-top:.18rem; color:var(--muted); font-size:.62rem; letter-spacing:.01em; }
+.source-note { display:block; margin-top:.45rem; color:var(--muted); font-size:.58rem; line-height:1.45; }
+.live-rakah { max-width:28rem; color:var(--accent); font-weight:650; line-height:1.4; }
+/* Long rak‘ah lines (e.g. Jumu’ah) wrap instead of running under the countdown. */
+.live-event-main small.live-rakah { white-space: normal; overflow-wrap: anywhere; }
+
+/* Individually configured end-of-window reminders. */
+.reminder-settings { margin-top: 1rem; padding-top: .9rem; border-top: 1px solid var(--line); }
+.reminder-settings h3 { margin: 0; font-size: .82rem; }
+.event-reminder-settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: .5rem; margin-top: .65rem; }
+.event-reminder-row { display:flex; align-items:center; justify-content:space-between; gap:.7rem; padding:.55rem .65rem; border:1px solid var(--line); border-radius:.65rem; background:var(--surface2); min-width:0; }
+.event-reminder-row label { margin:0; font-size:.68rem; font-weight:650; }
+.event-reminder-row select { width:auto; min-width:5.4rem; max-width:7rem; padding:.35rem .45rem; border:1px solid var(--line); border-radius:.45rem; background:var(--surface); color:var(--text); font-size:.65rem; }
+.pre-reminder-settings { margin-top: .9rem; }
+.pre-reminder-field { display:inline-flex; align-items:center; gap:.35rem; }
+.pre-reminder-field small { font-size:.6rem; color:var(--muted); white-space:nowrap; }
+.event-reminder-row .pre-reminder-input { width:4.2rem; padding:.35rem .45rem; border:1px solid var(--line); border-radius:.45rem; background:var(--surface); color:var(--text); font-size:.65rem; text-align:right; }
+.event-reminder-row .pre-reminder-input:invalid { border-color: var(--gold); }
+.progress-visual { filter: drop-shadow(0 0 .35rem color-mix(in srgb, var(--accent) 12%, transparent)); }
+@media (max-width: 700px) { .topbar { flex-wrap:wrap; } .top-date { min-width:0; } .hero-grid { grid-template-columns:minmax(0,1fr); } .app-shell { padding-left: .75rem; padding-right:.75rem; } }
+@media (max-height: 560px) { .app-shell { padding-top:.65rem; } .topbar { min-height:3rem; padding-bottom:.5rem; } }
+
+.quran-revelation-card { margin-top:.65rem; }
+.quran-verse { margin-top:.8rem; padding:.85rem 1rem; border:1px solid var(--line); border-radius:.75rem; background:var(--surface2); }
+.quran-arabic { color:var(--text); font-family:"Amiri","Noto Naskh Arabic",serif; font-size:clamp(1.25rem,2.1vw,2.2rem); line-height:1.9; text-align:right; }
+.quran-verse p { margin:.35rem 0 0; }
+
+
+/* Small maker's signature stays unobtrusive and follows the selected language. */
+.app-footer { display:flex; align-items:flex-end; justify-content:flex-end; gap:1rem; margin-top:2.5rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.55rem; }
+/* Tiny copyright line fixed in the bottom-left corner on every page. */
+.copyright-corner { position:fixed; z-index:40; left:.55rem; bottom:.35rem; color:color-mix(in srgb,var(--muted) 78%,transparent); font-size:.46rem; line-height:1.2; letter-spacing:.025em; white-space:nowrap; pointer-events:none; user-select:none; }
+.keyboard-help { width:min(28rem,calc(100vw - 2rem)); max-width:none; padding:1.25rem; border:1px solid var(--line); border-radius:1rem; color:var(--text); background:var(--surface); box-shadow:0 1.5rem 4rem rgba(0,0,0,.38); }
+.keyboard-help::backdrop { background:rgba(0,0,0,.55); backdrop-filter:blur(3px); }
+.keyboard-help-head { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+.keyboard-help-head h2 { margin:0; font-size:1.05rem; }
+.keyboard-help dl { display:grid; gap:.4rem; margin:1rem 0 0; }
+.keyboard-help dl div { display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:.5rem 0; border-bottom:1px solid var(--line); }
+.keyboard-help dt { min-width:5rem; padding:.2rem .45rem; border:1px solid var(--line); border-radius:.35rem; background:var(--surface2); font:600 .72rem ui-monospace,Consolas,monospace; text-align:center; }
+.keyboard-help dd { margin:0; color:var(--muted); font-size:.72rem; text-align:right; }
+.history-date-label { color:var(--accent); font-size:.7rem; font-weight:650; }
+.quran-suggestion { padding:.6rem .75rem; border-left:2px solid var(--accent); background:var(--surface2); border-radius:0 .5rem .5rem 0; font-size:.78rem; }
+.quran-revelation-card { margin-top:.65rem; }
+@media (max-width:560px) { .app-footer { align-items:flex-start; flex-direction:column; } }
+
+.description-group { border:0; border-radius:.8rem; overflow:hidden; background:var(--surface); margin-bottom:.75rem; }
+.description-group h3 { margin:0; padding:.7rem 1rem; color:var(--accent); background:var(--surface2); font-size:.7rem; letter-spacing:.04em; }
+
+/* Daily content carousels (history, Qur'anic verses, Sunnah & Seerah, date-specific prayers). */
+.carousel-host { position:relative; }
+.carousel-host.has-carousel:focus-visible { outline:0.125rem solid var(--accent); outline-offset:0.1875rem; }
+.carousel-nav { float:right; display:flex; align-items:center; gap:.4rem; margin:0 0 .4rem .75rem; color:var(--muted); font-size:.62rem; }
+.carousel-button { display:grid; place-items:center; width:1.6rem; height:1.6rem; padding:0; border:1px solid var(--line); border-radius:.5rem; background:var(--surface2); color:var(--text); font-size:1rem; line-height:1; cursor:pointer; transition:border-color .15s ease, background .15s ease; }
+.carousel-button:hover { border-color:var(--accent); background:var(--surface); }
+.carousel-counter { min-width:2.6rem; text-align:center; font-variant-numeric:tabular-nums; font-weight:650; }
+.carousel-slide::after { content:""; display:block; clear:both; }
+.voluntary-carousel { min-width:0; }
+.voluntary-carousel .carousel-nav { float:none; justify-content:flex-end; margin:0 0 .35rem; }
+.seasonal-carousel { padding:.4rem 1rem .2rem; }
+.seasonal-carousel .carousel-slide details { padding:.35rem 0 .6rem; border-bottom:0; }
+
+/* Prayer reference cards (v1.3.2): a reading layout, not the Daily prayers card.
+   The verse or hadith is the focus; rak'ahs and guidance sit below, quieter. */
+.ref-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap:.75rem; padding:.75rem; }
+.ref-card { display:flex; flex-direction:column; gap:.65rem; min-width:0; padding:.9rem 1rem 1rem; border:1px solid var(--line); border-radius:.8rem; background:var(--surface2); overflow-wrap:anywhere; }
+.seasonal-carousel .ref-card { margin:.2rem 0 .6rem; }
+.ref-title { margin:0; color:var(--accent); font-size:.74rem; font-weight:700; letter-spacing:.03em; }
+.ref-quote { position:relative; margin:0; padding:.05rem 0 0 1.45rem; }
+.ref-quote::before { content:"\201C"; position:absolute; left:0; top:-.2rem; color:var(--accent); font-family:Georgia, "Times New Roman", serif; font-size:2rem; line-height:1; }
+.ref-quote blockquote { margin:0; color:var(--text); font-size:.82rem; line-height:1.65; font-weight:500; }
+.ref-quote figcaption { margin-top:.4rem; color:var(--accent); font-size:.58rem; font-weight:650; line-height:1.45; }
+.ref-quote figcaption::before { content:"\2014\00a0"; }
+.ref-quote-minor { padding:.1rem 0 0 .8rem; border-left:.125rem solid var(--line); }
+.ref-quote-minor::before { content:none; }
+.ref-quote-minor blockquote { font-size:.68rem; font-weight:400; line-height:1.6; }
+.ref-note { margin:0; color:var(--muted); font-size:.56rem; font-style:italic; line-height:1.5; }
+.ref-practical { margin-top:auto; padding-top:.65rem; border-top:1px solid var(--line); color:var(--muted); font-size:.6rem; line-height:1.55; }
+.ref-practical p { margin:0 0 .3rem; }
+.ref-practical p:last-child { margin-bottom:0; }
+.ref-practical strong { color:var(--text); font-weight:650; }
+
+/* "Available right now" is always the first block of the home page (empty state included), directly above the next-event hero. */
+.live-events-section { margin-top: 1.375rem; margin-bottom: 0; }
+.live-events-section + .hero-grid { margin-top: 1.6875rem; }
+.compact-mode .live-events-section { margin-top: .9375rem; }
+.compact-mode .live-events-section + .hero-grid { margin-top: 1.25rem; }
+
+/* Calm style while the next event is a prohibited (disliked) interval, as in the Zawal row. */
+.next-card.is-interval .next-name { color: var(--gold); }
+.next-card.is-interval .next-name:hover { color: var(--gold); }
+.next-card.is-interval { background-image: linear-gradient(color-mix(in srgb, var(--gold) 5%, transparent), color-mix(in srgb, var(--gold) 5%, transparent)); }
+
+/* Locked ticks (v1.3.2): a marked event can be unmarked only until the next prayer event begins.
+   Colours stay; a small padlock and a tooltip ("Locked after Dhuhr began") say why it no longer changes. */
+.lock-mark { position:relative; display:inline-block; flex:0 0 auto; width:.6em; height:.44em; margin-inline-start:.4em; border-radius:.09em; background:currentColor; opacity:.5; vertical-align:baseline; font-size:inherit; cursor:default; }
+.lock-mark::before { content:""; position:absolute; left:50%; bottom:100%; width:.34em; height:.3em; transform:translateX(-50%); border:.1em solid currentColor; border-bottom:0; border-radius:.2em .2em 0 0; box-sizing:border-box; }
+.lock-mark::after { content:attr(data-lock-tip); display:none; position:absolute; left:0; bottom:calc(100% + .7rem); z-index:40; width:max-content; max-width:min(14rem,70vw); padding:.3rem .55rem; border:.0625rem solid var(--line); border-radius:.5rem; background:var(--surface3); box-shadow:0 .25rem .9rem rgba(0,0,0,.28); color:var(--text); font-size:.6rem; font-weight:500; line-height:1.4; white-space:normal; text-align:start; opacity:1; pointer-events:none; }
+.lock-mark:hover::after, .lock-mark:focus-visible::after, .is-locked:hover > .lock-mark::after, .is-locked:focus-visible > .lock-mark::after { display:block; }
+.lock-mark:focus-visible { outline:.125rem solid var(--accent); outline-offset:.2rem; }
+.round-check.is-locked, .part-tick.is-locked { position:relative; cursor:default; }
+.round-check.is-locked:hover { transform:none; }
+.part-tick.is-locked:hover i, .part-tick.is-locked:hover span { transform:none; }
+.round-check.is-locked > .lock-mark, .part-tick.is-locked > .lock-mark { position:absolute; right:-.1rem; bottom:-.05rem; margin:0; font-size:.5rem; color:var(--text); opacity:.75; }
+.round-check.is-locked > .lock-mark::after, .part-tick.is-locked > .lock-mark::after { left:auto; right:0; font-size:.6rem; }
+.prayer-status .lock-mark, .voluntary-summary-main .lock-mark { font-size:.5625rem; }
+.week-day.is-locked { cursor:default; }
+@media (prefers-reduced-motion: reduce) { .lock-mark::after { transition:none; } }
+
+/* Sky panel (v1.3.3): one soft SVG with rounded corners. Sky gradients (night, day, dawn, dusk) cross-fade by the
+   sun's altitude; every colour is mixed from theme tokens. Animation is transform/opacity only. */
+.sky-panel { --sky-n: 0; --sky-d: 1; --sky-t: 0; --sky-ta: 0; --sky-tb: 0; --sky-hg: 0; --sky-i: 1; --sky-w: 900px;
+  --forbidden: color-mix(in srgb, var(--accent) 12%, #9a4dff);
+  --sk-l0: #4f8fd8; --sk-l1: #8fc0ee; --sk-l2: #d9ecf8;
+  --sk-n0: color-mix(in srgb, #060a22 82%, var(--accent2)); --sk-n1: color-mix(in srgb, #131a4e 78%, var(--accent2)); --sk-n2: color-mix(in srgb, #2a3170 74%, var(--accent2));
+  --sk-d0: color-mix(in srgb, var(--accent) 34%, #5c97d6); --sk-d1: color-mix(in srgb, var(--accent) 26%, #98c4ea); --sk-d2: color-mix(in srgb, var(--accent) 20%, #e2eff8);
+  --sk-a0: color-mix(in srgb, #3b4580 70%, var(--accent2)); --sk-a1: color-mix(in srgb, #b78fcb 78%, var(--gold)); --sk-a2: color-mix(in srgb, var(--gold) 70%, #f6bf8e);
+  --sk-u0: color-mix(in srgb, #2b2766 74%, var(--accent2)); --sk-u1: color-mix(in srgb, #8c4f88 70%, var(--gold)); --sk-u2: color-mix(in srgb, var(--gold) 72%, #e2704e);
+  --sk-cloud: color-mix(in srgb, #fff 90%, var(--accent));
+  position:relative; isolation:isolate; overflow:hidden; height:5.8rem; margin:0 0 1rem; contain:layout paint style; container-type:inline-size;
+  border-radius:1.15rem; border:1px solid color-mix(in srgb, var(--line) 70%, transparent); clip-path:inset(0 round 1.15rem);
+  box-shadow:var(--shadow);
+  background:var(--sk-n1); }
+.sky-panel[hidden] { display:none; }
+.sky-svg { position:absolute; inset:0; width:100%; height:100%; overflow:hidden; border-radius:inherit; clip-path:inset(0 round 1.15rem); }
+/* faint geometric frame: a hairline inner border with a repeating 8-point star band (mask, so it follows theme colours) */
+/* frame is drawn inside the SVG (tile bands + double hairline) */
+.sky-sun-star { fill:url(#skySunDisc); stroke:color-mix(in srgb, var(--gold) 60%, #fff3c4); stroke-width:.25; stroke-linejoin:round; }
+.st-l0 { stop-color:var(--sk-l0); } .st-l1 { stop-color:var(--sk-l1); } .st-l2 { stop-color:var(--sk-l2); }
+.st-hg { stop-color:color-mix(in srgb, var(--gold) 88%, #ffd9a8); }
+.st-sun { stop-color:color-mix(in srgb, var(--gold) 82%, #ffe7a8); } .st-sun-edge { stop-color:color-mix(in srgb, var(--gold) 86%, #e58a3c); }
+.st-cloud { stop-color:var(--sk-cloud); }
+.sky-hglow { opacity:var(--sky-hg); transition:opacity .9s ease; }
+.sky-arc { fill:none; stroke-width:1.7; stroke-dasharray:.1 6.2; stroke-linecap:round; transition:opacity .9s ease; }
+.sky-arc-night { stroke:#fff; opacity:calc(.22 + .5 * var(--sky-n)); }
+.sky-arc-day { stroke:color-mix(in srgb, #0f2236 80%, var(--accent2)); opacity:calc(.5 * var(--sky-d)); }
+.sky-horizon { opacity:.5; }
+.sky-stars { opacity:var(--sky-n); transition:opacity .9s ease; }
+.sky-panel[data-stars="off"] .sky-stars { display:none; }
+.sky-star { fill:#fff; } use.sky-star { fill:#fffbe6; } .sky-star.l0 { opacity:.55; } .sky-star.l1 { opacity:.8; } .sky-star.l2 { opacity:.98; }
+.sky-star-halo { fill:#cfd9ff; opacity:.14; }
+.sky-star.tw { animation:sky-twinkle var(--sd, 3.2s) ease-in-out var(--sdl, 0s) infinite alternate; }
+.sky-star.l0.tw { animation-name:sky-twinkle-soft; }
+@keyframes sky-twinkle { from { opacity:.35; } to { opacity:1; } }
+@keyframes sky-twinkle-soft { from { opacity:.25; } to { opacity:.7; } }
+.sky-zone { opacity:.92; transition:opacity .9s ease; }
+.sky-zone .ze { fill:none; stroke:var(--forbidden); stroke-width:1.1; opacity:.9; }
+.sky-zone .zb { fill:url(#skyZoneG); filter:url(#skyFeather); }
+.sky-zone .zc { fill:none; stroke:var(--forbidden); stroke-linecap:butt; stroke-linejoin:round; opacity:1; filter:url(#skyFeather); }
+.st-zone { stop-color:var(--forbidden); }
+.sky-zone.is-active { animation:sky-zone-pulse 4.2s ease-in-out infinite alternate; }
+@keyframes sky-zone-pulse { from { opacity:.78; } to { opacity:1; } }
+.sky-body { transition:transform .9s ease, opacity .9s ease; }
+.sky-sun-glow { opacity:calc(.35 + .65 * var(--sky-i)); }
+.sky-moon-dark { fill:color-mix(in srgb, #aab4d8 20%, transparent); stroke:color-mix(in srgb, #fffbee 26%, transparent); stroke-width:.4; }
+.sky-moon-craters circle { fill:#9a937a; opacity:.16; }
+.sky-moon.is-faint { opacity:.6; }
+.sky-moon.is-faint .sky-moon-dark { stroke:#fff; stroke-opacity:.6; fill:color-mix(in srgb, #fff 18%, transparent); }
+.sky-moon.is-faint .sky-moon-glow { opacity:0; }
+.sky-cloud { fill:url(#skyCloudG); opacity:calc(.12 + .8 * (1 - var(--sky-n))); transition:opacity .9s ease; animation:sky-drift var(--dur) linear var(--dl) infinite; }
+.sky-cloud ellipse, .sky-cloud circle { fill:url(#skyCloudG); }
+.sky-cloud.c1 { --dur:170s; --dl:-26s; --rx:.14; }
+.sky-cloud.c2 { --dur:260s; --dl:-130s; --rx:.52; opacity:calc(.08 + .6 * (1 - var(--sky-n))); }
+.sky-cloud.c3 { --dur:340s; --dl:-272s; --rx:.8; opacity:calc(.08 + .55 * (1 - var(--sky-n))); }
+@keyframes sky-drift { from { transform:translateX(-130px); } to { transform:translateX(var(--sky-w)); } }
+.page-hidden .sky-star, .page-hidden .sky-cloud, .page-hidden .sky-zone { animation-play-state:paused; }
+.compact-mode .sky-panel { height:4.2rem; }
+@media (prefers-reduced-motion: reduce) {
+  .sky-star.tw, .sky-cloud, .sky-zone.is-active { animation:none; }
+  .sky-cloud { transform:translateX(calc(var(--sky-w) * var(--rx))); }
+  .sky-body, .sky-bg, .sky-stars, .sky-arc, .sky-zone, .sky-hglow { transition:none; }
+}
+
+/* Prohibited interval between "available now" and the next prayer event (v1.3.2): same gold style as the Zawal row. */
+
+/* ===== v1.3.3 · "Available right now" is the primary section =====
+   Sizes use em/rem/clamp so they follow the root scale and all ten UI fonts; colours are theme tokens only.
+   One full-width card per event; the Next event / Progress row below keeps its previous size. */
+.live-events-section { --forbidden: color-mix(in srgb, var(--accent) 30%, #8f6cff); }
+.live-events { grid-template-columns: minmax(0, 1fr); gap: 0.875rem; }
+.live-events-section .section-heading h2 { font-size: clamp(1.25rem, 1.05rem + 0.45vw, 1.75rem); }
+.live-event { font-size: clamp(0.9375rem, 0.82rem + 0.4vw, 1.4rem); flex-wrap: wrap; gap: 1em 1.5em; min-height: 7.5em; padding: 1.25em 1.6em; border-radius: 1.1em; border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 9%, var(--surface)), var(--surface) 70%); box-shadow: var(--shadow); }
+.live-event.is-done { background: linear-gradient(135deg, color-mix(in srgb, var(--good) 12%, var(--surface)), var(--surface) 70%); }
+.live-event-main { flex: 1 1 15em; gap: 0.1em; }
+.live-event-type { margin: 0 0 0.45em; color: var(--accent); font-size: 0.7em; letter-spacing: .18em; }
+.live-name { font-size: 2.1em; line-height: 1.12; white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
+.live-event-main small { margin-top: 0.4em; font-size: 0.82em; }
+.live-event-main small.live-rakah { font-size: 0.76em; }
+.live-event-main .prayer-parts { max-width: 20em; margin-top: 0.5em; }
+.live-event-actions { gap: 1.1em; margin-inline-start: auto; }
+.event-countdown { align-items: flex-end; gap: 0.25em; padding: 0.3em 0.5em; border-radius: 0.6em; }
+.event-countdown span { font-size: 0.62em; letter-spacing: .16em; }
+.event-countdown strong { font-size: clamp(1.9em, 1.2em + 1.6vw, 3.1em); line-height: 1.05; letter-spacing: .02em; }
+.live-event .round-check { flex-basis: 2.4em; width: 2.4em; height: 2.4em; border-width: 0.12em; font-size: 1em; }
+.compact-mode .live-event { min-height: 5.75em; padding: 0.85em 1.2em; }
+.compact-mode .live-name { font-size: 1.7em; }
+.compact-mode .event-countdown strong { font-size: clamp(1.6em, 1em + 1.3vw, 2.4em); }
+.live-empty { font-size: clamp(0.9375rem, 0.82rem + 0.4vw, 1.2rem); padding: 1.4em 1.6em; }
+.live-events-section + .hero-grid { margin-top: 1.5rem; }
+
+/* Forbidden-time card: only while an interval is in progress, violet accent from theme tokens */
+.forbidden-card { --forbidden: color-mix(in srgb, var(--accent) 30%, #8f6cff); --forbidden-ink: color-mix(in srgb, var(--forbidden) 62%, var(--text)); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1em 1.5em; min-width: 0; min-height: 7.5em; padding: 1.25em 1.6em; border: 0.0625rem solid color-mix(in srgb, var(--forbidden) 60%, var(--line)); border-radius: 1.1em; font-size: clamp(0.9375rem, 0.82rem + 0.4vw, 1.4rem); background: linear-gradient(135deg, color-mix(in srgb, var(--forbidden) 17%, var(--surface)), color-mix(in srgb, var(--forbidden) 5%, var(--surface)) 72%); box-shadow: var(--shadow), 0 0 2.2em color-mix(in srgb, var(--forbidden) 18%, transparent); }
+.forbidden-main { flex: 1 1 15em; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 0.35em; }
+.forbidden-type { color: var(--forbidden-ink); font-size: 0.7em; font-weight: 800; letter-spacing: .18em; }
+.forbidden-line { color: var(--text); font-size: clamp(1.3em, 1em + 0.9vw, 1.9em); line-height: 1.2; overflow-wrap: anywhere; }
+.forbidden-range { color: var(--muted); font-size: 0.9em; font-variant-numeric: tabular-nums; }
+.forbidden-detail { color: var(--muted); font-size: 0.76em; line-height: 1.45; }
+.forbidden-left-box { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25em; margin-inline-start: auto; }
+.forbidden-left-box span { color: var(--muted); font-size: 0.62em; font-weight: 800; letter-spacing: .16em; }
+.forbidden-left { color: var(--forbidden-ink); font: 700 clamp(1.9em, 1.2em + 1.6vw, 3.1em)/1.05 ui-monospace, Consolas, monospace; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+.compact-mode .forbidden-card { min-height: 5.75em; padding: 0.85em 1.2em; }
+
+/* Daily prayers: quiet countdown under the Qur'an/hadith line */
+.prayer-eta { margin-top: 0.5rem; color: var(--muted); font-size: 0.6875rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+.prayer-eta.is-current { color: var(--good); }
+.prayer-eta[hidden] { display: none; }
+
+/* Settings: send a real test toast and show what Windows did (v1.3.3) */
+.test-notification { margin: .9rem 0 1rem; }
+.notification-status { margin: .5rem 0 0; padding: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: .75rem; line-height: 1.5; color: var(--muted); }
+.notification-status:empty { display: none; }
+
+/* v1.3.3: hidden home sections stay hidden whatever display rule the section has; prayer descriptions are
+   three rows stacked vertically, each sized to its content (never side by side). */
+.section-block[hidden] { display: none !important; }
+.description-list { display: flex; flex-direction: column; gap: .75rem; overflow: visible; border: 0; border-radius: 0; background: transparent; }
+.description-list .description-group { margin: 0; }
+.interval-readout small { white-space: pre-line; line-height: 1.6; }
+
+/* ===== v1.3.4 ===== */
+:root {
+  /* one spacing scale for the whole page: rem/clamp, so it follows the window width and the root font size */
+  --sp-1: clamp(.16rem, .13rem + .07vw, .22rem); --sp-2: clamp(.32rem, .27rem + .11vw, .44rem); --sp-3: clamp(.5rem, .42rem + .19vw, .68rem);
+  --sp-4: clamp(.66rem, .56rem + .25vw, .9rem); --sp-5: clamp(.9rem, .75rem + .38vw, 1.3rem);
+  --tile-blue: color-mix(in srgb, #1b3f96 74%, var(--surface)); --tile-turq: color-mix(in srgb, #17b3aa 72%, var(--accent)); --tile-gold: color-mix(in srgb, var(--gold) 84%, #f4c64f);
+}
+.topbar { gap: var(--sp-4); padding-bottom: var(--sp-3); min-height: 0; }
+.sky-panel { margin: var(--sp-4) 0; }
+main > .section-block, main > .hero-grid, main > section { margin-top: var(--sp-4); margin-bottom: 0; }
+main > :first-child, .live-events-section { margin-top: 0; }
+.live-events-section + .hero-grid { margin-top: var(--sp-4); }
+.hero-grid { gap: var(--sp-3); }
+.live-events, .prayer-grid { gap: var(--sp-3); }
+.section-heading { margin-bottom: var(--sp-3); }
+.section-heading h2, .section-heading .eyebrow { margin-top: 0; }
+.brand-sub { margin-top: var(--sp-1); font-size: clamp(.72rem, .68rem + .15vw, .85rem); }
+.top-date { min-width: 0; font-size: clamp(.75rem, .68rem + .2vw, .9rem); line-height: 1.35; }
+.top-date time { margin-top: var(--sp-1); font-size: clamp(1.4rem, 1.1rem + 1vw, 2.1rem); line-height: 1.1; letter-spacing: .05em; }
+.brand-name { font-size: clamp(1.3rem, 1.15rem + .5vw, 1.7rem); }
+
+/* Available right now: same visual weight as the Next event / Progress cards, with a light geometric frame */
+.live-event { --live-fs: clamp(.875rem, .8rem + .22vw, 1.04rem); font-size: var(--live-fs); --tk: calc(var(--live-fs) * 1.45); position: relative; overflow: hidden; isolation: isolate; min-height: 0; gap: var(--sp-2) var(--sp-4);
+  border: 1px solid color-mix(in srgb, var(--gold) 38%, var(--line)); border-radius: 1.05em; }
+.live-name { font-size: 1.9em; }
+.live-event-main { flex: 1 1 13em; }
+.live-event-main .prayer-parts { max-width: 17em; margin-top: .45em; }
+.event-countdown strong { font-size: clamp(1.6em, 1.25em + 1vw, 2.2em); }
+.event-countdown span { font-size: .6em; }
+/* Fard tick (the round check) is exactly 20% larger than the Sunnah and Nafl ticks, same em basis */
+.live-event .part-tick i { width: var(--tk); height: var(--tk); margin-top: 0; border-width: calc(var(--tk) * .09); font-size: calc(var(--tk) * .5); }
+.live-event .round-check { flex: 0 0 calc(var(--tk) * 1.2); width: calc(var(--tk) * 1.2); height: calc(var(--tk) * 1.2); border-width: calc(var(--tk) * .09 * 1.2); font-size: calc(var(--tk) * .6); }
+.compact-mode .live-event { padding: var(--sp-2) var(--sp-3); }
+.forbidden-card { min-height: 0; padding: var(--sp-3) calc(var(--sp-4) + .4em); }
+.live-empty { padding: var(--sp-3) var(--sp-4); }
+.home-subsection { margin-top: var(--sp-3); }
+.on-this-day-card[hidden], .description-group[hidden] { display: none !important; }
+.card-toggles { display: flex; flex-direction: column; gap: var(--sp-1); margin: 0 0 var(--sp-2) 1.6rem; }
+.card-toggles .check-row { margin-top: 0; margin-bottom: 0; }
+.card-toggles input:disabled + * , .card-toggles:has(input:disabled) { opacity: .55; }
+/* Fullscreen: the page has no drag region; make sure nothing swallows pointer events there */
+.is-fullscreen, .is-fullscreen body { -webkit-app-region: no-drag; cursor: auto; }
+.is-fullscreen .app-shell { pointer-events: auto; }
+.live-event-actions { align-items: center; }
+.sky-zone .zb { filter: none; }
+
+/* ===== v1.3.5 · tilework (Alhambra / Isfahan inspired). Colours come from CSS variables, so every theme blends. ===== */
+.tg-blue { fill: var(--tile-blue); } .tg-turq { fill: var(--tile-turq); } .tg-gold { fill: var(--tile-gold); }
+.tg-gold-line { fill: none; stroke: var(--tile-gold); stroke-width: .7; stroke-linejoin: round; }
+.tile-defs { position: absolute; }
+/* Available right now: ornament lives only on the edges (top and bottom tile bands, a carved arch at the top centre, a double hairline) */
+.live-event { padding: calc(12px + var(--sp-2)) calc(var(--sp-4) + .3em); border-color: color-mix(in srgb, var(--tile-gold) 60%, var(--line)); box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--tile-blue) 55%, transparent), inset 0 0 0 4px color-mix(in srgb, var(--tile-gold) 40%, transparent); }
+.live-event .tile-band { position: absolute; left: 0; width: 100%; height: 12px; z-index: -1; pointer-events: none; opacity: .92; }
+.live-event .tile-top { top: 0; } .live-event .tile-bottom { bottom: 0; }
+.live-event .tile-arch { position: absolute; top: 0; left: 50%; width: 2.1rem; height: 2.1rem; transform: translateX(-50%); z-index: -1; pointer-events: none; }
+.live-event.is-done .tile-band, .live-event.is-done .tile-arch { filter: saturate(.7); }
+/* Sky: tile-mural */
+.sky-panel { border: 0; }
+.sf-outer { stroke: var(--tile-gold); stroke-width: 1.6; } .sf-inner { stroke: color-mix(in srgb, var(--tile-turq) 80%, #fff); stroke-width: .8; opacity: .85; }
+.sky-frame #skyBandT, .sky-frame #skyBandB { opacity: .88; }
+.sky-sun-rays { fill: color-mix(in srgb, var(--tile-gold) 70%, #fff3c4); opacity: .55; transform-box: fill-box; transform-origin: center; animation: sky-rays 120s linear infinite; }
+.sky-sun-star { fill: color-mix(in srgb, var(--tile-gold) 88%, #ffe9a8); stroke: color-mix(in srgb, var(--tile-gold) 55%, #b4741c); stroke-width: .3; }
+.sky-sun-star2 { fill: color-mix(in srgb, var(--tile-gold) 50%, #fff4c8); stroke: color-mix(in srgb, var(--tile-gold) 60%, #b4741c); stroke-width: .2; }
+@keyframes sky-rays { to { transform: rotate(360deg); } }
+.sky-moon-dark { fill: color-mix(in srgb, var(--tile-gold) 14%, transparent); stroke: color-mix(in srgb, var(--tile-gold) 55%, transparent); }
+.sc-line { fill: none; stroke: color-mix(in srgb, var(--sk-cloud) 55%, var(--tile-gold)); stroke-width: 1.4; stroke-linecap: round; }
+.sky-star-halo { fill: var(--tile-gold); }
+use.sky-star { fill: color-mix(in srgb, var(--tile-gold) 45%, #fffbe6); }
+@media (prefers-reduced-motion: reduce) { .sky-sun-rays { animation: none; } }
+/* Settings: per-card toggles, clearly grouped under each tab switch */
+.home-cards-settings .tab-block { margin-top: var(--sp-3); padding: var(--sp-2) var(--sp-3); border: 1px solid var(--line); border-radius: .8rem; background: color-mix(in srgb, var(--surface2) 55%, transparent); }
+.home-cards-settings .tab-switch strong { font-size: .95rem; }
+.card-toggles { margin: var(--sp-2) 0 0 1.4rem; padding-left: var(--sp-3); border-left: 2px solid color-mix(in srgb, var(--tile-gold) 55%, var(--line)); }
+.toggle-sub { margin: 0 0 var(--sp-1); color: var(--muted); font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.toast { pointer-events: none; } /* an invisible toast must never swallow clicks, in fullscreen or not */
