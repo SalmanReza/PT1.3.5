@@ -1,0 +1,156 @@
+name: Build Prayer Times for Windows
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ['v*']
+permissions:
+  contents: read
+concurrency:
+  group: build-windows-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+      # Check sources out with LF endings (as committed) so source-level tests
+      # behave exactly as on Linux/macOS; .gitattributes enforces the same.
+      - name: Keep LF line endings on checkout
+        shell: pwsh
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: '**/package-lock.json'
+      - name: Locate the actual desktop project directory
+        id: locate
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = (Resolve-Path '.').Path
+          $candidate = $null
+          if ((Test-Path (Join-Path $root 'package.json')) -and
+              (Test-Path (Join-Path $root 'src/app.js')) -and
+              (Test-Path (Join-Path $root 'src-tauri/tauri.conf.json'))) {
+            $candidate = Get-Item (Join-Path $root 'package.json')
+          } else {
+            $candidate = Get-ChildItem -Path $root -Filter 'package.json' -File -Recurse -ErrorAction Stop |
+              Where-Object {
+                $_.FullName -notmatch '[\\/](node_modules|target)[\\/]' -and
+                (Test-Path (Join-Path $_.DirectoryName 'src/app.js')) -and
+                (Test-Path (Join-Path $_.DirectoryName 'src-tauri/tauri.conf.json'))
+              } |
+              Sort-Object { $_.FullName.Length } |
+              Select-Object -First 1
+          }
+          if (-not $candidate) {
+            throw "Prayer Times project not found. Expected package.json, src/app.js and src-tauri/tauri.conf.json together under $root."
+          }
+          $projectDir = $candidate.DirectoryName
+          "project_dir=$projectDir" >> $env:GITHUB_OUTPUT
+          $relative = [System.IO.Path]::GetRelativePath($root, $projectDir).Replace('\', '/')
+          "project_rel=$relative" >> $env:GITHUB_OUTPUT
+          Write-Host "npm and Tauri commands will run from: $projectDir"
+          if (-not (Test-Path (Join-Path $projectDir 'package.json'))) { throw 'package.json missing in detected project directory.' }
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+      - name: Check Rust version (1.90 or newer is required by the Tauri plugins)
+        shell: pwsh
+        run: |
+          $text = (& rustc --version)
+          Write-Host $text
+          if ($text -notmatch 'rustc (\d+)\.(\d+)') { throw "Could not read the Rust version: $text" }
+          if (([int]$Matches[1] -lt 1) -or (([int]$Matches[1] -eq 1) -and ([int]$Matches[2] -lt 90))) { throw "Rust 1.90 or newer is required. Found: $text" }
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: '${{ steps.locate.outputs.project_rel }}/src-tauri -> target'
+      - name: Install Node dependencies in the detected project directory
+        working-directory: ${{ steps.locate.outputs.project_dir }}
+        shell: pwsh
+        run: |
+          Write-Host "Installing dependencies in $PWD"
+          if (-not (Test-Path './package.json')) { throw "package.json not found in $PWD" }
+          # Reproducible install from the committed lockfile; fall back to npm install without one.
+          if (Test-Path './package-lock.json') {
+            npm ci
+            if ($LASTEXITCODE -ne 0) { throw 'npm ci failed.' }
+          } else {
+            npm install
+            if ($LASTEXITCODE -ne 0) { throw 'npm install failed.' }
+          }
+      - name: Run source checks and tests
+        working-directory: ${{ steps.locate.outputs.project_dir }}
+        shell: pwsh
+        run: |
+          npm run check
+          if ($LASTEXITCODE -ne 0) { throw 'Source checks failed.' }
+          npm test
+          if ($LASTEXITCODE -ne 0) { throw 'Automated tests failed.' }
+      - name: Compile Windows x64 executable without bundling
+        working-directory: ${{ steps.locate.outputs.project_dir }}
+        shell: pwsh
+        run: |
+          npm run build -- --no-bundle
+          if ($LASTEXITCODE -ne 0) { throw 'Windows executable build failed.' }
+          $exe = './src-tauri/target/release/prayer-times-desktop.exe'
+          if (-not (Test-Path $exe)) { throw "The executable was not produced: $exe" }
+          Write-Host "Built $((Resolve-Path $exe).Path) ($([math]::Round((Get-Item $exe).Length / 1MB, 1)) MB)"
+      - name: Sign executable when a code-signing certificate is configured
+        working-directory: ${{ steps.locate.outputs.project_dir }}
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          ./scripts/Sign-Windows.ps1 -Path ./src-tauri/target/release/prayer-times-desktop.exe
+          exit 0
+      - name: Upload standalone executable fallback
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Prayer-Times-Windows-x64-Executable-Fallback
+          path: ${{ steps.locate.outputs.project_dir }}/src-tauri/target/release/prayer-times-desktop.exe
+          if-no-files-found: warn
+      - name: Prepare NSIS toolchain (retry transient GitHub 5xx errors)
+        shell: pwsh
+        working-directory: ${{ steps.locate.outputs.project_dir }}
+        run: ./scripts/Prepare-NSIS.ps1
+      - name: Bundle NSIS installer from compiled executable
+        shell: pwsh
+        working-directory: ${{ steps.locate.outputs.project_dir }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $bundled = $false
+          for ($attempt = 1; $attempt -le 3; $attempt++) {
+            npx tauri bundle --bundles nsis
+            if ($LASTEXITCODE -eq 0) { $bundled = $true; break }
+            if ($attempt -lt 3) {
+              $delay = [Math]::Min(60, [Math]::Pow(2, $attempt) * 5)
+              Write-Warning "NSIS bundling failed (attempt $attempt/3). Retrying in $delay seconds."
+              Start-Sleep -Seconds $delay
+            }
+          }
+          if (-not $bundled) { throw 'NSIS bundling failed after three attempts. The standalone EXE artifact was already uploaded.' }
+      - name: Sign installer when a code-signing certificate is configured
+        working-directory: ${{ steps.locate.outputs.project_dir }}
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $installer = Get-ChildItem -Path ./src-tauri/target/release/bundle/nsis -Filter '*-setup.exe' -File | Select-Object -First 1
+          if (-not $installer) { throw 'No NSIS installer found to sign.' }
+          ./scripts/Sign-Windows.ps1 -Path $installer.FullName
+          exit 0
+      - name: Upload NSIS installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: Prayer-Times-Windows-x64-Installer
+          path: ${{ steps.locate.outputs.project_dir }}/src-tauri/target/release/bundle/nsis/*-setup.exe
+          if-no-files-found: error
