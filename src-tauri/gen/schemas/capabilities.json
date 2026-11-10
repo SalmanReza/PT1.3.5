@@ -1,0 +1,1 @@
+{"default":{"identifier":"default","description":"Default permissions for Prayer Times desktop window","local":true,"windows":["main"],"permissions":["core:default","core:window:allow-set-fullscreen","core:tray:allow-get-by-id","core:tray:allow-set-tooltip","notification:default","autostart:default"]}}

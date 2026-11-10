@@ -1,0 +1,19 @@
+[package]
+name = "prayer-times-desktop"
+version = "1.3.5"
+description = "Offline-first prayer times for Windows"
+authors = ["Salman Reza Amit"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-notification = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-single-instance = "2"
+
+# Windows toasts are sent with an explicit AppUserModelID (see src/main.rs); same crate the notification plugin uses.
+[target.'cfg(windows)'.dependencies]
+notify-rust = "4"

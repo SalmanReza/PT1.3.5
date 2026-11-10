@@ -1,0 +1,25 @@
+{
+  "name": "prayer-times-desktop",
+  "version": "1.3.5",
+  "description": "Offline-first prayer times, reminders and prayer tracker for Windows",
+  "author": "Salman Reza Amit",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "test": "node --test tests/*.test.js",
+    "check": "node --check src/app.js && node --check src/prayer-engine.js && node --check src/location.js && node --check src/islamic-content.js && node --check src/weekly-cycle.js && node --check src/keyboard.js && node --check src/carousel.js && node --check src/progress-figure.js && node --check src/daily-content.js && node --check src/sound.js && node --check src/branding.js && node --check src/prayer-boundary.js && node --check src/day-timeline.js && node --check src/progress-lines.js && node --check src/habits.js && node --check src/tray-tooltip.js && node --check src/forbidden-times.js && node --check src/reminder-schedule.js && node --check src/prayer-layers.js && node --check src/time-format.js && node --check src/day-status.js && node --check src/daily-reflections.js && node --check src/ui-fonts.js && node --check src/prayer-card-notes.js && node --check src/prayer-evidence.js && node --check src/tick-lock.js && node --check src/history-migrate.js && node --check src/interval-rows.js && node --check src/sky.js && node --check src/sections.js && node --check src/season.js",
+    "web:dev": "vite --host 127.0.0.1 --port 1420",
+    "web:build": "vite build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.5.0",
+    "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "@tauri-apps/plugin-notification": "^2.3.0",
+    "@tauri-apps/plugin-autostart": "^2.0.0",
+    "@tauri-apps/api": "^2.5.0"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Prayer Times",
+  "version": "1.3.5",
+  "identifier": "com.prayertimes.desktop",
+  "build": {
+    "beforeDevCommand": "npm run web:dev",
+    "devUrl": "http://127.0.0.1:1420",
+    "beforeBuildCommand": "npm run web:build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Prayer Times",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 640,
+        "minHeight": 480,
+        "resizable": true,
+        "center": true,
+        "visible": false,
+        "decorations": true,
+        "maximized": true,
+        "maximizable": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self' asset:; img-src 'self' data: asset:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src ipc: http://ipc.localhost http://127.0.0.1:1420 ws://127.0.0.1:1420"
+    },
+    "withGlobalTauri": true
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "nsis"
+    ],
+    "publisher": "Salman Reza Amit",
+    "copyright": "© 2026–2027 Salman Reza Amit",
+    "shortDescription": "Offline-first prayer times, reminders and prayer tracker",
+    "category": "Utilities",
+    "windows": {
+      "nsis": {
+        "displayLanguageSelector": false,
+        "languages": [
+          "English"
+        ]
+      },
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      }
+    },
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "longDescription": "A private, offline-first Windows prayer companion with local prayer calculations, local history, prayer reminders, configurable location and daily tracking."
+  }
+}
